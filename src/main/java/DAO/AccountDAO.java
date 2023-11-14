@@ -3,9 +3,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import Model.Account;
 import Util.ConnectionUtil;
 public class AccountDAO {
@@ -13,7 +10,7 @@ public class AccountDAO {
     public AccountDAO() {
         this.connection = ConnectionUtil.getConnection();
     }
-    public Account getAccountByUsernameAndPassword(Account account){
+    /*public Account getAccountByUserPassword(Account account){
         String query = "SELECT * FROM Account WHERE username = ? AND password = ?";
     
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -33,6 +30,33 @@ public class AccountDAO {
         // Handle the exception according to your application's error handling strategy
         }
         return null;
+    }*/
+
+    // LOGIN USER
+    
+    public Account getAccountByPassword(String username) throws SQLException {
+        String query = "SELECT * FROM accounts WHERE username = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, username);
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            Account account = new Account(
+                resultSet.getInt("account_id"),
+                resultSet.getString("username"),
+                resultSet.getString("password")
+                );
+                return account;
+        } else {
+            return null;
+        }
+    }
+    public boolean verifyLogin(String username, String password) throws SQLException {
+        Account account = getAccountByUsername(username);
+        if (account != null && account.getPassword().equals(password)) {
+            return true;
+        } else {
+            return false;
+        }
     }
     public Account createAccount(Account account) {
         String query = "INSERT INTO Account (username, password) VALUES (?, ?)";
@@ -75,6 +99,4 @@ public class AccountDAO {
 
         return account;
     }
-
-    // Other account-related methods
 }

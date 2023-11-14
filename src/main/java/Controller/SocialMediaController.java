@@ -1,10 +1,13 @@
 package Controller;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
+import Model.Message;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import Service.AccountService;
@@ -29,7 +32,8 @@ public class SocialMediaController {
     }
     public Javalin startAPI() {
         Javalin app = Javalin.create();
-        
+        app.post("/message",this::getAllMessages);
+        app.post("/login",this::loginUser);
         app.post("/register",this::CreateHandler);
         return app;
     }
@@ -53,8 +57,45 @@ public class SocialMediaController {
         }
         Account addAccount=accountService.registerUser(account);
         ctx.status(200);
-        ctx.json(accountService.getAccountByUsername(addAccount.getUsername()));
+        ctx.json(accountService.getAccountByUsername(account.getUsername()));
         
+        
+    }
+
+    //USER LOGIN TEST
+
+    private void loginUser(Context ctx) throws JsonMappingException, JsonProcessingException{
+        ObjectMapper ne = new ObjectMapper();
+        Account account=ne.readValue(ctx.body(),Account.class);
+        if(account.getUsername().isEmpty() || account.getPassword().isEmpty()){
+            ctx.status(401);
+            ctx.result("");
+            return;
+        }
+        Account loggedInAccount = accountService.loginUser(account);
+        if(loggedInAccount != null){
+            ctx.status(200);
+            ctx.json(loggedInAccount);
+        }else{
+            ctx.status(401);
+            ctx.result("");
+        }
+        
+    }
+
+
+    // RETRIVE ALL MESSAGES TEXT
+
+
+    private void getAllMessages(Context ctx) throws JsonProcessingException {
+        // Retrieve all messages from the database using your MessageService or DAO
+        List<Message> messages = messageService.getAllMessages();
+
+        // Set the response status to 200
+        ctx.status(200);
+
+        // Convert the list of messages to JSON and send it in the response body
+        ctx.json(messages);
     }
 
     /**
@@ -64,6 +105,4 @@ public class SocialMediaController {
     private void exampleHandler(Context context) {
         context.json("sample text");
     }
-
-
 }

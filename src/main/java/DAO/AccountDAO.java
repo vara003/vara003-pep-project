@@ -10,54 +10,29 @@ public class AccountDAO {
     public AccountDAO() {
         this.connection = ConnectionUtil.getConnection();
     }
-    /*public Account getAccountByUserPassword(Account account){
-        String query = "SELECT * FROM Account WHERE username = ? AND password = ?";
     
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1,account.getUsername());
-            preparedStatement.setString(2, account.getPassword());
-    
-            ResultSet resultSet = preparedStatement.executeQuery();
-            int b=resultSet.getInt("Account_id");
-    
-            if (resultSet.next()) {
-                return new Account(b,resultSet.getString("Username"),resultSet.getString("Password"));
 
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace(); 
-        // Handle the exception according to your application's error handling strategy
-        }
-        return null;
-    }*/
-
-    // LOGIN USER
+    // LOGIN USER(7)
     
-    public Account getAccountByPassword(String username) throws SQLException {
-        String query = "SELECT * FROM accounts WHERE username = ?";
+    public Account getAccountByPassword(Account account) throws SQLException {
+        String query = "SELECT * FROM account WHERE username = ? and password = ?";
         PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, username);
+        statement.setString(1, account.username);
+        statement.setString(2, account.password);
         ResultSet resultSet = statement.executeQuery();
+        
         if (resultSet.next()) {
-            Account account = new Account(
+            Account account1 = new Account(
                 resultSet.getInt("account_id"),
                 resultSet.getString("username"),
                 resultSet.getString("password")
                 );
-                return account;
+                return account1;
         } else {
             return null;
         }
     }
-    public boolean verifyLogin(String username, String password) throws SQLException {
-        Account account = getAccountByUsername(username);
-        if (account != null && account.getPassword().equals(password)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    
     public Account createAccount(Account account) {
         String query = "INSERT INTO Account (username, password) VALUES (?, ?)";
 
@@ -78,6 +53,10 @@ public class AccountDAO {
         return null;
     }
 
+    
+    // user registration (8)
+
+
     public Account getAccountByUsername(String username) {
         String query = "SELECT * FROM Account WHERE username = ?";
         Account account = null;
@@ -96,7 +75,9 @@ public class AccountDAO {
         } catch (SQLException e) {
             e.printStackTrace(); // Handle the exception according to your application's error handling strategy
         }
-
         return account;
+    }
+    public Account getById(String accountId) {
+       return null;
     }
 }

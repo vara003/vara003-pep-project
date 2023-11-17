@@ -11,61 +11,29 @@ public class AccountService {
     public AccountService(AccountDAO accountDAO) {
         this.accountDAO = accountDAO;
     }
+        // login User(7)
 
-    // RETRIVE ALL MESSAGES TEXT
-
-
-    public Account registerUser(Account account) {
-        // Check if the username is valid and not already taken
-        if (account.getUsername() == null || account.getUsername().isEmpty()) {
-            throw new IllegalArgumentException("Username cannot be empty");
+    public Account loginUser(Account account) throws SQLException {
+        Account account1=accountDAO.getAccountByPassword(account);
+        if(account != null && account1 != null && account.username != null && account1.username != null && account.password != null && account1.password != null && account.username.equals(account1.username) && account.password.equals(account1.password)){
+            return accountDAO.getAccountByPassword(account);
+        } else{
+            return null;
         }
-
-        // Check if the password meets the minimum length requirement
-        if (account.getPassword().length() < 4) {
-            throw new IllegalArgumentException("Password must be at least 4 characters long");
-        }
-
-        // Check if the username is already taken
-        if (accountDAO.getAccountByUsername(account.getUsername()) != null) {
-            throw new IllegalArgumentException("Username is already taken");
-        }
-
-        // If all checks pass, create the account
-        return accountDAO.createAccount(account);
     }
 
 
-
-    //public Account registerUser(Account account) {
-        // Additional validation logic can be added here
-        //return accountDAO.createAccount(account);
-    //}
-     //public Account loginUser(Account account) {
-        // Additional validation logic can be added here
-        //return accountDAO.getAccountByPassword(account);
-
-        // login User
-
-    public Account loginUser(Account account) throws SQLException {
-        if (accountDAO.verifyLogin(account.username, account.password)) {
-
-            return accountDAO.getAccountByPassword(account.getUsername());
-            if(account!=null)
-        } else 
-            return null;
-        }
-
-    // Additional account-related methods based on business logic
-
-
-    //USER REGISTRATION TEST()
-
+    // USER REGISTRARTION TEST (8)
+    
     public Account getAccountByUsername(String str){
         Account account=accountDAO.getAccountByUsername(str);
         if(account!=null){
             return account;
         }
         return null;
+    }
+    public Account registerUser(Account account) {
+        Account savedAccount = accountDAO.createAccount(account);
+        return savedAccount ;
     }
 }

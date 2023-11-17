@@ -42,7 +42,7 @@ public class SocialMediaController {
         app.delete("/messages/{message_id}", this::deleteMessageById);
         app.get("/messages",this::getAllMessages);
         app.get("/accounts/{account_Id}/messages",this::getMessagesByUser);
-        //As a user, I should be abled to the  to submit a PATCH request on the endpoint PATCH localhost:8080/messages/{message_id}.
+        //As a user, I should be to submit a PATCH request on the endpoint PATCH localhost:8080/messages/{message_id}.
         return app;
     }
     // delete(2)

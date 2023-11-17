@@ -43,10 +43,6 @@ public class SocialMediaController {
         app.get("/messages",this::getAllMessages);
         app.get("/accounts/{account_Id}/messages",this::getMessagesByUser);
         //As a user, I should be able to submit a PATCH request on the endpoint PATCH localhost:8080/messages/{message_id}.
-        //app.get("/messages/{message_id}",this::getMessagesByUser);
-        //app.post("/messages",this::postMessage);
-        //app.get("/message",this::retrieveAllMessageTest);
-        //app.get("/MessageById",this::retrieveMessageById);
         return app;
     }
     // delete(2)
